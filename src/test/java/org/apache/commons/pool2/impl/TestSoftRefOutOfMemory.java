@@ -28,10 +28,12 @@ import java.util.List;
 import org.apache.commons.pool2.BasePooledObjectFactory;
 import org.apache.commons.pool2.PooledObject;
 import org.junit.After;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  */
+@Ignore
 public class TestSoftRefOutOfMemory {
     private SoftReferenceObjectPool<String> pool;
 
