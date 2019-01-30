@@ -60,28 +60,9 @@ public class TestAbandonedObjectPool {
 
     @After
     public void tearDown() throws Exception {
-        final String poolName = pool.getJmxName().toString();
         pool.clear();
         pool.close();
         pool = null;
-
-        final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-        final Set<ObjectName> result = mbs.queryNames(new ObjectName(
-                "org.apache.commoms.pool2:type=GenericObjectPool,*"), null);
-        // There should be no registered pools at this point
-        final int registeredPoolCount = result.size();
-        final StringBuilder msg = new StringBuilder("Current pool is: ");
-        msg.append(poolName);
-        msg.append("  Still open pools are: ");
-        for (final ObjectName name : result) {
-            // Clean these up ready for the next test
-            msg.append(name.toString());
-            msg.append(" created via\n");
-            msg.append(mbs.getAttribute(name, "CreationStackTrace"));
-            msg.append('\n');
-            mbs.unregisterMBean(name);
-        }
-        Assert.assertEquals(msg.toString(), 0, registeredPoolCount);
     }
 
     /**

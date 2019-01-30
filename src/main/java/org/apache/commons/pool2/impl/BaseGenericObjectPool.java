@@ -1015,14 +1015,6 @@ public abstract class BaseGenericObjectPool<T> extends BaseObject {
      * Unregisters this pool's MBean.
      */
     final void jmxUnregister() {
-        if (objectName != null) {
-            try {
-                ManagementFactory.getPlatformMBeanServer().unregisterMBean(
-                        objectName);
-            } catch (final MBeanRegistrationException | InstanceNotFoundException e) {
-                swallowException(e);
-            }
-        }
     }
 
     /**
@@ -1040,8 +1032,8 @@ public abstract class BaseGenericObjectPool<T> extends BaseObject {
      */
     private ObjectName jmxRegister(final BaseObjectPoolConfig<T> config,
             final String jmxNameBase, String jmxNamePrefix) {
+        if(true)return null;
         ObjectName newObjectName = null;
-        final MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         int i = 1;
         boolean registered = false;
         String base = config.getJmxNameBase();
@@ -1058,7 +1050,6 @@ public abstract class BaseGenericObjectPool<T> extends BaseObject {
                 } else {
                     objName = new ObjectName(base + jmxNamePrefix + i);
                 }
-                mbs.registerMBean(this, objName);
                 newObjectName = objName;
                 registered = true;
             } catch (final MalformedObjectNameException e) {
@@ -1072,12 +1063,6 @@ public abstract class BaseGenericObjectPool<T> extends BaseObject {
                             BaseObjectPoolConfig.DEFAULT_JMX_NAME_PREFIX;
                     base = jmxNameBase;
                 }
-            } catch (final InstanceAlreadyExistsException e) {
-                // Increment the index and try again
-                i++;
-            } catch (final MBeanRegistrationException | NotCompliantMBeanException e) {
-                // Shouldn't happen. Skip registration if it does.
-                registered = true;
             }
         }
         return newObjectName;
